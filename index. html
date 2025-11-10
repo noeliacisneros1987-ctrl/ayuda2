@@ -1,76 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Centro de Ayuda — Uruguay</title>
+  <title>Botón de Ayuda</title>
   <style>
-    body{font-family:system-ui,Arial,sans-serif;margin:20px;text-align:center;}
-    h1{margin-top:10px;}
-    .btn{
-      display:inline-block;margin:12px;padding:14px 18px;border-radius:10px;
-      text-decoration:none;color:#fff;font-weight:600;min-width:260px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background-color: #f2f2f2;
     }
-    .wa{background:#25D366} /* WhatsApp */
-    .tel{background:#4a90e2} /* llamadas */
-    .call{background:#e04b4b} /* emergencia */
-    .note{margin-top:18px;color:#444;font-size:0.95rem}
-    .danger{color:#990000;font-weight:700;margin-top:10px}
+    button {
+      display: block;
+      width: 250px;
+      margin: 20px auto;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .sms { background-color: #007AFF; color: white; }
+    .whatsapp { background-color: #25D366; color: white; }
   </style>
 </head>
 <body>
-  <h1>Centro de Ayuda — Uruguay</h1>
-  <p>Seleccioná el contacto que querés usar:</p>
+  <h2>🚨 Necesito Ayuda</h2>
+  <p>Presioná un botón para enviar tu ubicación:</p>
 
-  <!-- WhatsApp: solo mensaje y ubicación -->
-  <p>
-    <a class="btn wa" href="#" onclick="sendWhatsApp('59899019500')">
-      📩 WhatsApp — Enviar mensaje de ayuda con ubicación
-    </a>
-  </p>
+  <button class="sms" onclick="enviarSMS()">Enviar SMS</button>
+  <button class="whatsapp" onclick="enviarWhatsApp()">Enviar por WhatsApp</button>
 
-  <!-- Llamada 0800 4141 -->
-  <p>
-    <a class="btn tel" href="tel:08004141">📞 0800 4141 — Orientación violencia de género</a>
-  </p>
+  <script>
+    function enviarSMS() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const mensaje = `Necesito ayuda. Mi ubicación es: https://www.google.com/maps?q=${lat},${lon}`;
+          window.location.href = `sms:?body=${encodeURIComponent(mensaje)}`;
+        });
+      }
+    }
 
-  <!-- Llamada Línea Azul 0800 5050 -->
-  <p>
-    <a class="btn tel" href="tel:08005050">👶 0800 5050 — Línea Azul (niños/adolescentes)</a>
-  </p>
-
-  <!-- Llamada 911 -->
-  <p>
-    <a class="btn call" href="tel:911">🚨 911 — Emergencia inmediata</a>
-  </p>
-
-  <p class="note">Si das permiso al navegador, el botón de WhatsApp incluirá tu ubicación automáticamente.</p>
-  <p class="danger">Si estás en peligro inmediato: llamá al <strong>911</strong> ahora.</p>
-
-<script>
-function sendWhatsApp(number){
-  const baseMessage = "Necesito ayuda. Mi ubicación es: ";
-  
-  if(!navigator.geolocation){
-    // fallback si no hay geolocalización
-    window.location.href = 'https://wa.me/' + number + '?text=' + encodeURIComponent(baseMessage);
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(function(pos){
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
-    const maps = 'https://www.google.com/maps?q=' + lat + ',' + lon;
-    const msg = baseMessage + maps;
-    const encoded = encodeURIComponent(msg);
-    window.location.href = 'https://wa.me/' + number + '?text=' + encoded;
-  }, function(err){
-    // fallback si deniega ubicación
-    window.location.href = 'https://wa.me/' + number + '?text=' + encodeURIComponent(baseMessage);
-  }, {enableHighAccuracy:true, timeout:7000});
-}
-</script>
-
+    function enviarWhatsApp() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const mensaje = `Necesito ayuda. Mi ubicación es: https://www.google.com/maps?q=${lat},${lon}`;
+          window.location.href = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+        });
+      }
+    }
+  </script>
 </body>
 </html>
